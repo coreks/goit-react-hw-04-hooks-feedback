@@ -5,38 +5,46 @@ import FeedbackOptions from './components/FeedbackOptions/FeedbackOptions';
 import Section from './components/Section/Section';
 
 function App() {
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
+  // const [good, setGood] = useState(0);
+  // const [neutral, setNeutral] = useState(0);
+  // const [bad, setBad] = useState(0);
 
-  const handleIncrement = e => {
-    const option = e.target.name;
+  const [state, setState] = useState({ good: 0, neutral: 0, bad: 0 });
 
-    switch (option) {
-      case 'good':
-        setGood(state => state + 1);
-        break;
-      case 'neutral':
-        setNeutral(state => state + 1);
-        break;
-      case 'bad':
-        setBad(state => state + 1);
-        break;
+  const handleIncrement = option => {
+    // const option = e.target.option;
 
-      default:
-        return;
-    }
+    setState(prevState => ({ ...prevState, [option]: prevState[option] + 1 }));
+
+    // switch (option) {
+    //   case 'good':
+    //     setGood(state => state + 1);
+    //     break;
+    //   case 'neutral':
+    //     setNeutral(state => state + 1);
+    //     break;
+    //   case 'bad':
+    //     setBad(state => state + 1);
+    //     break;
+
+    //   default:
+    //     return;
+    // }
   };
 
   const countTotalFeedback = () => {
-    return good + neutral + bad;
+    return Object.values(state).reduce((acc, value) => acc + value, 0);
+
+    // return good + neutral + bad;
   };
 
   const countPositiveFeedbackPercentage = () => {
-    return Math.round((good / countTotalFeedback()) * 100);
+    return Math.round((state.good / countTotalFeedback()) * 100);
   };
 
-  const options = ['good', 'neutral', 'bad'];
+  const options = Object.keys(state);
+  const total = countTotalFeedback();
+  const percentage = countPositiveFeedbackPercentage();
 
   return (
     <div>
@@ -46,11 +54,11 @@ function App() {
 
       <Section title="Statistics">
         <Statistics
-          good={good}
-          neutral={neutral}
-          bad={bad}
-          total={countTotalFeedback()}
-          positivePercentage={countPositiveFeedbackPercentage()}
+          good={state.good}
+          neutral={state.neutral}
+          bad={state.bad}
+          total={total}
+          positivePercentage={percentage}
         />
       </Section>
     </div>
